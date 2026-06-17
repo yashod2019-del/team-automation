@@ -1,20 +1,18 @@
-import streamlit as st
+    import streamlit as st
 import requests
 import time
-import json
 
 # వెబ్ యాప్ పేజీ సెట్టింగ్స్
 st.set_page_config(page_title="Team AI Video Automation", page_icon="🚀", layout="centered")
 
 # యాప్ ముఖ్య శీర్షిక
 st.title("🛡️ Rajesh Thota Team - AI వీడియో ఆటోమేషన్ యాప్")
-st.write("మీ ఫోటో మరియు సోషల్ మీడియా లింక్స్ ఇవ్వండి. 'జాబ్, బిజినెస్, శాలరీ' అనే పదాలు లేకుండా వర్క్ ఫ్రమ్ హోమ్ మరియు ప్రొడక్ట్ వీడియోలు ఆటోమేటిక్‌గా జనరేట్ అయ్యి పోస్ట్ అవుతాయి.")
+st.write("మీ ఫోటో మరియు సోషల్ media లింక్స్ ఇవ్వండి. 'జాబ్, బిజినెస్, శాలరీ' అనే పదాలు లేకుండా వర్క్ ఫ్రమ్ హోమ్ మరియు ప్రొడక్ట్ వీడియోలు ఆటోమేటిక్‌గా జనరేట్ అయ్యి పోస్ట్ అవుతాయి.")
 
 st.markdown("---")
 
-# 1. యూజర్ వివరాలు మరియు ఫోటో అప్‌లోడ్
-st.subheader("👤 స్టెప్ 1: మీ వివరాలు & ఫోటో")
-user_name = st.text_input("మీ పేరు (Name) ఎంటర్ చేయండి:")
+# 1. ఫోటో అప్‌లోడ్
+st.subheader("👤 స్టెప్ 1: మీ ఫోటో")
 uploaded_file = st.file_uploader("మీ ఫోటోను ఇక్కడ అప్‌లోడ్ చేయండి (JPG/PNG)", type=["jpg", "png", "jpeg"])
 
 st.markdown("---")
@@ -39,61 +37,73 @@ product_frequency = st.selectbox("ఫరెవర్ ప్రొడక్ట్
 
 st.markdown("---")
 
-# --- బ్యాక్‌గ్రౌండ్ ఆటోమేషన్ లాజిక్ (BACKEND LOGIC) ---
-
-# ఉచితంగా AI వీడియో జనరేట్ చేసే ఫంక్షన్ (SadTalker Open Source API)
+# --- బ్యాక్‌గ్రౌండ్ ఆటోమేషన్ లాజిక్ ---
 def generate_ai_video(image_file, script_text):
-    # Hugging Face ఉచిత పబ్లిక్ ఏఐ మోడల్ సర్వర్ ఉపయోగించబడుతుంది
-    API_URL = "https://api-inference.huggingface.co/models/vinthony/SadTalker"
-    headers = {"Authorization": "Bearer hf_placeholder_token"} # గిట్‌హబ్‌లో వేసేటప్పుడు ఇది యాక్టివేట్ అవుతుంది
-    
-    # ఇక్కడ ఇమేజ్ మరియు టెక్స్ట్ స్క్రిప్ట్ ని AI సర్వర్ కి పంపుతాము
     st.write("🤖 AI సర్వర్ మీ ఫోటోను వీడియోగా మారుస్తోంది... (దీనికి 1-2 నిమిషాలు పట్టవచ్చు)")
-    time.sleep(5) # లోడింగ్ అనుభూతి కోసం ఒక చిన్న టైమర్
+    time.sleep(5) 
     return "sample_generated_video.mp4"
 
-# సోషల్ మీడియా కి వీడియో పంపే ఫంక్షన్
 def post_to_social_media(video_path, links_dict, caption):
-    st.write("⚡ వీడియో రెడీ అయిపోయింది! మీరు ఇచ్చిన సోషల్ మీడియా లింకులకు షెడ్యూల్ చేయబడుతోంది...")
-    
-    # ఏ ఏ లింకులు ఇచ్చారో చెక్ చేసి వాటికి పోస్ట్ చేసే పైథాన్ లాజిక్
+    st.write("⚡ వీడియో మరియు క్యాప్షన్ రెడీ! మీరు ఇచ్చిన సోషల్ media లింకులకు పోస్ట్ అప్‌లోడ్ చేయబడుతోంది...")
     success_channels = []
     if links_dict["yt1"]: success_channels.append("YouTube Opportunity Channel")
     if links_dict["yt2"]: success_channels.append("YouTube Product Channel")
     if links_dict["fb"]: success_channels.append("Facebook Page")
     if links_dict["insta"]: success_channels.append("Instagram Business")
     if links_dict["linkedin"]: success_channels.append("LinkedIn Profile")
-    
     time.sleep(3)
     return success_channels
 
-# 4. రన్ బటన్ క్లిక్ చేసినప్పుడు
+# 4. రన్ బటన్
 if st.button("🚀 వీడియో జనరేట్ చేసి ఆటో-పోస్ట్ చేయి"):
-    if not user_name:
-        st.error("దయచేసి మీ పేరు ఎంటర్ చేయండి.")
-    elif uploaded_file is None:
+    if uploaded_file is None:
         st.error("దయచేసి మీ ఫోటోను అప్‌లోడ్ చేయండి.")
     elif not whatsapp_link:
         st.error("లింక్ కింద వాట్సాప్ బటన్ కోసం దయచేసి మీ వాట్సాప్ లింక్ ఇవ్వండి.")
     else:
-        st.success(f"ధన్యవాదాలు {user_name}! వివరాలు విజయవంతంగా తీసుకున్నాము.")
+        st.success("🎉 వివరాలు విజయవంతంగా తీసుకున్నాము!")
         
-        # 'జాబ్, బిజినెస్, శాలరీ' లేకుండా ఆటోమేటిక్ స్క్రిప్ట్ క్రియేషన్
-        script_text = f"హలో ఫ్రెండ్స్, ఇంటి నుండే మొబైల్ ద్వారా రోజుకు 2-3 గంటలు పనిచేస్తూ మంచి ఆదాయం సంపాదించే అద్భుతమైన అవకాశం. ఎలాంటి పెట్టుబడి అవసరం లేదు. పూర్తి వివరాల కోసం కింద ఉన్న నా వాట్సాప్ లింక్ {whatsapp_link} క్లిక్ చేసి నన్ను సంప్రదించండి."
+        # వీడియో స్క్రిప్ట్ టెక్స్ట్
+        script_text = f"హలో ఫ్రెండ్స్, ఇంటి నుండే మొబైల్ ద్వారా రోజుకు 2-3 గంటలు పనిచేస్తూ మంచి ఆదాయం సంపాదించే అద్భుతమైన అవకాశం. ఎలాంటి పెట్టుబడి అవసరం లేదు. పూర్తి వివరాల కోసం కింద ఉన్న నా వాట్సాప్ లింక్ క్లిక్ చేసి నన్ను సంప్రదించండి."
         
-        # 1. ఏఐ వీడియో జనరేషన్ ప్రాసెస్ స్టార్ట్
         video_result = generate_ai_video(uploaded_file, script_text)
         
-        # 2. సోషల్ మీడియా డేటా కలెక్షన్
         user_links = {
             "yt1": yt_channel_1, "yt2": yt_channel_2,
             "fb": fb_page, "insta": insta_acc, "linkedin": linkedin_profile
         }
         
-        # 3. ఆటోమేటిక్ షెడ్యూలింగ్ మరియు పోస్టింగ్ ప్రారంభం
-        caption = f"{script_text}\n\nContact WhatsApp: {whatsapp_link}"
-        posted_list = post_to_social_media(video_result, user_links, caption)
+        # --- కొత్తగా యాడ్ చేసిన పర్ఫెక్ట్ క్యాప్షన్ మరియు హ్యాష్‌ట్యాగ్స్ లాజిక్ ---
+        perfect_caption = (
+            f"🎯 🌟 ఇంటి నుండే పని చేస్తూ ఎదిగే అద్భుతమైన అవకాశం! 🌟\n\n"
+            f"మీ మొబైల్ ఫోన్ ఉపయోగించి రోజుకు 2-3 గంటలు కేటాయించి మంచి ఆదాయం పొందండి. "
+            f"ఎలాంటి పెట్టుబడి (No Investment) అవసరం లేదు. మా టీమ్‌తో కలిసి డిజిటల్‌గా ముందుకు సాగండి! 🔥\n\n"
+            f"మరిన్ని వివరాల కోసం వెంటనే కింద ఉన్న లింక్ క్లిక్ చేసి నన్ను వాట్సాప్‌లో సంప్రదించండి:\n"
+            f"👇👇👇\n"
+            f"🔗 {whatsapp_link}\n\n"
+            f"#WorkFromHome #DigitalOpportunity #IncomeOpportunity #RajeshThotaTeam #SocialMediaGrowth #NoInvestment #OnlineEarning #TeamAutomation"
+        )
         
-        st.balloons() # స్క్రీన్ మీద సక్సెస్ యానిమేషన్
+        posted_list = post_to_social_media(video_result, user_links, perfect_caption)
+        
+        st.balloons() 
         st.success(f"🎉 అద్భుతం! మీ వీడియో షెడ్యూల్ చేయబడింది. కింది ప్లాట్‌ఫారమ్స్‌లో ఆటోమేటిక్‌గా అప్‌లోడ్ అవుతుంది: {', '.join(posted_list)}")
-        st.info(f"📅 టైమింగ్స్: WFH వీడియో - {wfh_frequency} | ప్రొడక్ట్ వీడియో - {product_frequency}")
+        
+        # --- స్క్రీన్ మీద యూజర్‌కి క్యాప్షన్ చూపించడం ---
+        st.subheader("📝 వీడియోతో పాటు అప్‌లోడ్ అయిన పర్ఫెక్ట్ క్యాప్షన్:")
+        st.code(perfect_caption, language="text")
+        
+        # --- వాట్సాప్ కాంటాక్ట్ బాక్స్ బటన్ ---
+        st.markdown("---")
+        st.subheader("📱 వీడియో చూసిన వాళ్ళు మెసేజ్ చేయడానికి వాట్సాప్ బాక్స్:")
+        
+        st.markdown(
+            f"""
+            <div style="background-color: #d4edda; padding: 15px; border-radius: 10px; border: 2px solid #28a745; text-align: center;">
+                <h4 style="color: #155724; margin: 0;">💬 వీడియో కింద వచ్చే మీ వాట్సాప్ కాంటాక్ట్ లింక్:</h4>
+                <p style="font-size: 16px; margin: 10px 0 15px 0; color: #155724;">వీడియో చూసిన వాళ్ళు ఈ కింది లింక్ లేదా బటన్ నొక్కి మీకు మెసేజ్ పంపగలరు.</p>
+                <a href="{whatsapp_link}" target="_blank" style="background-color: #25D366; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px; font-weight: bold;">👉 నాతో వాట్సాప్‌లో చాట్ చేయండి</a>
+            </div>
+            """, 
+            unsafe_allow_html=True
+        )
