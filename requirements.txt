@@ -1,8 +1,0 @@
-streamlit
-yt-dlp
-openai-whisper
-deep-translator
-gTTS
-pydub
-moviepy
-torch
